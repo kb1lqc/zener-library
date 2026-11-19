@@ -15,6 +15,7 @@ the file that now holds it. Load only the file your role needs.
 | Defaults instead of questions; Check-row defaults ("Choosing check rows") | docs/spec/extract.md |
 | calc.py | docs/spec/extract.md |
 | Temperature and combined errors (the one recipe) | docs/spec/extract.md |
+| Local datasheet review packet (SHADOW) | docs/spec/datasheet-review.md |
 | Families and variants | docs/spec/family.md |
 | Series of numbered rows | docs/spec/series.md |
 | Series components (the value is a design input) | docs/spec/series.md |

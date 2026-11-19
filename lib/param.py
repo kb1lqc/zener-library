@@ -31,6 +31,7 @@ class Param:
     text: str = None  # a rating stated in words, no number
     typ_spread: float = None  # set when the DS prints "+/-X" as typ: typ is then 0 and X is the typical spread
     verified: str = None  # "<who> <YYYY-MM-DD> <method>": an independent check of this row against the DS (None = not yet)
+    verification_type: str = None  # human_page_image | cross_model_page_image | manufacturer_export
 
     @classmethod
     def tol(cls, nominal, fraction, unit):

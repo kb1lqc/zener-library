@@ -168,12 +168,24 @@ def _verified_ok(text):
 
 
 def verified_findings(data, variants=None):
-    """`verified` is "<who> <YYYY-MM-DD> <method>" (docs/spec/extract.md, Fields)."""
+    """Validate reviewer stamps and explicit provenance (docs/spec/extract.md, Fields)."""
     items = [(f"param {k}", t) for k, t in data.get("param", {}).items()]
     for v, table in (variants or {}).items():
         items += [(f"variant {v} param {k}", t) for k, t in table.get("param", {}).items()]
-    return [Finding("verified-format", "", loc, f"verified '{t['verified']}' is not '<who> <YYYY-MM-DD> <method>'")
-            for loc, t in items if "verified" in t and not _verified_ok(t["verified"])]
+    allowed_types = {"human_page_image", "cross_model_page_image", "manufacturer_export"}
+    out = []
+    for loc, row in items:
+        stamp = row.get("verified")
+        kind = row.get("verification_type")
+        if stamp is not None and not _verified_ok(stamp):
+            out.append(Finding("verified-format", "", loc,
+                               f"verified '{stamp}' is not '<who> <YYYY-MM-DD> <method>'"))
+        if kind is not None and (not isinstance(kind, str) or kind not in allowed_types):
+            out.append(Finding("verification-type", "", loc,
+                               f"verification_type '{kind}' must be one of {', '.join(sorted(allowed_types))}"))
+        if kind is not None and stamp is None:
+            out.append(Finding("verification-type", "", loc, "verification_type requires a verified stamp"))
+    return out
 
 
 def cite_sheets(data, variants=None):

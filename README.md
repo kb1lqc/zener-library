@@ -108,7 +108,9 @@ pcb build -Wstyle -Dwarnings components/TexasInstruments/INA821IDGK   # build on
 python3 -m examples.current_sense        # regenerate the worked example
 ```
 
-A human verifies a part by opening its datasheet next to its README: every row and every equation names its page.
+Per-parameter human verification is recorded by `verified` plus `verification_type = "human_page_image"` in
+`component.toml`; its supporting page images and decisions are kept in the component's `datasheet-review/` archive. See the
+[review workflow](docs/spec/datasheet-review.md).
 
 ## For AI assistants designing with this library
 
@@ -130,8 +132,26 @@ A human verifies a part by opening its datasheet next to its README: every row a
 2. Fix up the symbol and footprint per docs/KICAD.md into `components/<Manufacturer>/<Value>/`.
 3. Write `component.toml` and `calc.py` per docs/SPEC.md, reading table pages as rendered images
    (`pdftoppm -r 150 -png -f N -l N`), not extracted text.
-4. Give every abs_max / rec_op row `check_pins`, `check_ambient` or an `unchecked` reason, then
+4. Generate the complete review packet and save its human-review record beside the component with one command:
+   ```sh
+   python3 tools/ds_review_packet.py docs/datasheets/<datasheet>.pdf components/<Manufacturer>/<Value> \
+     --out temporary/<Value>-review --archive
+   ```
+   Open `components/<Manufacturer>/<Value>/datasheet-review/<PDF-SHA-prefix>/datasheet-review.md` and `coverage.md`.
+   Compare each row with its cited PDF image, record a decision, then account for every indexed section/table/figure
+   and manually check for unindexed material. `AGREE_TEXT_CHECK` is only a text aid, not verification. This one
+   command calls `ds_index` and `table_xcheck`; do not run those scripts separately. Commit the archive with the
+   component; never copy the PDF into `components/`.
+5. For each **Confirmed** parameter only, add both fields inside its `[param.<key>]` table:
+   `verified = "abrown 2026-11-19 human page-image review"` and
+   `verification_type = "human_page_image"`. Cross-model audits use `cross_model_page_image`; text checks get no
+   verification stamp. `lib.check` validates format, not whether the review happened. If a value changes, remove or
+   renew its stamp and review it again.
+6. After filling reviewer/date, attestation, every parameter decision, and all coverage items, run
+   `python3 tools/ds_review_packet.py --finalize components/<Manufacturer>/<Value>/datasheet-review/<PDF-SHA-prefix>`.
+   It refuses incomplete checklists, stale values/cites, and Confirmed rows without matching human stamps.
+7. Give every abs_max / rec_op row `check_pins`, `check_ambient` or an `unchecked` reason, then
    `python3 -m lib.check` clean, `python3 -m lib.zen`, `python3 -m lib.readme`.
-5. Add `tests/zen/<Value>_harness.zen` and its cases in `tests/test_zen.py`; all tests pass.
-6. Have a second reviewer check every number against the page images.
+8. Add `tests/zen/<Value>_harness.zen` and its cases in `tests/test_zen.py`; all tests pass.
+9. Have a second reviewer check every number against the page images.
 A short guide to the workflow and part types is [docs/WORKFLOW.md](docs/WORKFLOW.md). The full procedure, with defaults for every judgement call, is in [CLAUDE.md](CLAUDE.md).

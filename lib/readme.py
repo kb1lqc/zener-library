@@ -55,7 +55,7 @@ def param_rows(params, kind):
         cond += f" Note: {t['note']}" if t.get("note") else ""
         cite = t.get("cite", "") + (" (curve)" if t.get("curve") else "")
         rows.append([t.get("name", ""), t.get("symbol", ""), shown(t, "min"), shown(t, "typ"), shown(t, "max"),
-                     t.get("unit", ""), cond.strip(), cite])
+                     t.get("unit", ""), cond.strip(), cite, verification_label(t)])
     return rows
 
 
@@ -139,6 +139,61 @@ def limits_line(tables):
     return text + "\n"
 
 
+def verification_category(row):
+    stamp = row.get("verified")
+    if not isinstance(stamp, str) or not stamp.strip():
+        return "none"
+    kind = row.get("verification_type")
+    if kind in ("human_page_image", "cross_model_page_image", "manufacturer_export"):
+        return kind
+    lower = stamp.lower()
+    if "cross-model" in lower or "sonnet-audit" in lower:
+        return "cross_model_page_image"
+    if "manufacturer-export" in lower:
+        return "manufacturer_export"
+    return "legacy"
+
+
+def verification_label(row):
+    category = verification_category(row)
+    if category == "none":
+        return ""
+    labels = {
+        "human_page_image": "human page-image review",
+        "cross_model_page_image": "cross-model page-image audit",
+        "manufacturer_export": "manufacturer export",
+        "legacy": "legacy/unclassified stamp",
+    }
+    stamp = row.get("verified")
+    return labels[category] + (": " + str(stamp) if stamp else "")
+
+
+def review_status(folder, params, variants):
+    rows = list(params.values()) + [
+        row for variant in variants.values() for row in variant.get("param", {}).values()
+    ]
+    total = len(rows)
+    counts = {kind: sum(verification_category(row) == kind for row in rows) for kind in (
+        "human_page_image", "cross_model_page_image", "manufacturer_export", "legacy"
+    )}
+    human = counts["human_page_image"]
+    color = "brightgreen" if total and human == total else "yellow" if human else "lightgrey"
+    message = f"{human}%2F{total}%20human" if total else "no%20parameter%20rows"
+    label = f"{human}/{total} human" if total else "no parameter rows"
+    archive = folder / "datasheet-review"
+    target = "datasheet-review/" if archive.is_dir() else "../../../docs/spec/datasheet-review.md"
+    badge = (f"[![Human page-image review: {label}]"
+             f"(https://img.shields.io/badge/human%20review-{message}-{color})]({target})")
+    note = (
+        f"Human page-image review: {human}/{total}; cross-model audits: {counts['cross_model_page_image']}; "
+        f"manufacturer-export stamps: {counts['manufacturer_export']}; legacy/unclassified: {counts['legacy']}. "
+        "Text checks are not verification. `lib.check` validates stamp format, not that review occurred."
+    )
+    if not total:
+        note = "This component has no `[param.*]` rows."
+    return f"## Datasheet review\n\n{badge}\n\n{note}\n"
+
+
 def variants_table(part, variants):
     """Variants table: Value, MPN, alternates, temp_grade, then every other [part] key some variant overrides."""
     base = ("mpn", "alternates", "temp_grade")
@@ -157,7 +212,9 @@ def variant_sections(variants):
         rows = [r for kind in KINDS for r in param_rows(v.get("param", {}), kind)]
         if rows:
             text += f"\n## Variant-specific parameters: {name}\n\n"
-            text += md_table(["Parameter", "Symbol", "Min", "Typ", "Max", "Unit", "Conditions", "Cite"], rows)
+            text += md_table(
+                ["Parameter", "Symbol", "Min", "Typ", "Max", "Unit", "Conditions", "Cite", "Verified"], rows
+            )
     return text
 
 
@@ -253,7 +310,9 @@ def build(folder):
         data = tomllib.load(f)
     variants = variants_of(folder)
     part, shared = data.get("part", {}), data.get("param", {})
-    text = f"{HEADER}\n\n# {part.get('value', folder.name)}\n\n## Part\n\n"
+    text = f"{HEADER}\n\n# {part.get('value', folder.name)}\n\n"
+    text += review_status(folder, shared, variants)
+    text += "\n## Part\n\n"
     for key in PART_ORDER:
         if key in part:
             text += f"- **{key}**: {part[key]}\n"
@@ -271,7 +330,9 @@ def build(folder):
         rows = param_rows(shared, kind)
         if rows:
             text += f"\n## Parameters: {kind}\n\n"
-            text += md_table(["Parameter", "Symbol", "Min", "Typ", "Max", "Unit", "Conditions", "Cite"], rows)
+            text += md_table(
+                ["Parameter", "Symbol", "Min", "Typ", "Max", "Unit", "Conditions", "Cite", "Verified"], rows
+            )
     text += variant_sections(variants)
     every = list(shared.values()) + [t for v in variants.values() for t in v.get("param", {}).values()]
     text += "\n## Limits of this data\n\n" + limits_line(every)

@@ -2,6 +2,12 @@
 
 # ERJ-8ENF
 
+## Datasheet review
+
+[![Human page-image review: 0/27 human](https://img.shields.io/badge/human%20review-0%2F27%20human-lightgrey)](../../../docs/spec/datasheet-review.md)
+
+Human page-image review: 0/27; cross-model audits: 0; manufacturer-export stamps: 0; legacy/unclassified: 0. Text checks are not verification. `lib.check` validates stamp format, not that review occurred.
+
 ## Part
 
 - **alternates**: []
@@ -48,45 +54,45 @@ Rated voltage at decade values, computed from `p70`, `v_limit` and the formula a
 
 ## Parameters: rec_op
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Rated power at 70 degC | P70 |  |  | 0.25 | W | Ambient 70 degC; use with case temperature below the upper category temperature (footnote *1) Note: The catalog prints 0.25 W for ERJ8EN. Printed with no MIN/TYP/MAX label: stored as max (Defaults table). Derated above 70 degC (derate_knee, derate_zero). No abs-max table in this catalog. NRFND row. | DS p.10, Ratings <+/-1 %>, Power rating (70 degC) (W), ERJ8EN row |
-| Limiting element voltage | V limit |  |  | 200 | V | Note: Upper limit on RCWV (footnote *2): RCWV = sqrt(Power rating x Resistance value) or this limit, whichever is less. See rcwv_rule. | DS p.10, Ratings <+/-1 %>, Limiting element voltage (V), ERJ8EN row |
-| Maximum overload voltage | V overload |  |  | 400 | V | Note: Upper limit on the overload test voltage (footnote *3): OTV = specified magnification x RCWV or this limit, whichever is less. | DS p.10, Ratings <+/-1 %>, Maximum overload voltage (V), ERJ8EN row |
-| Rated continuous working voltage, RCWV | RCWV |  | sqrt(Power rating x Resistance value), or limiting element voltage, whichever less |  | V | Note: Formula, not a number. calc.py rated_voltage implements it. | DS p.10, Ratings <+/-1 %>, footnote *2 |
-| Category temperature range | T category | -55 |  | 155 | degC | Note: Read as ambient, the axis of the derating figure (DS p.10). Ratings are for the case temperature below this limit (footnote *1). | DS p.10, Ratings <+/-1 %>, Category temperature range (degC), ERJ8EN row (merged cell with ERJ2RK, ERJ3EK, ERJ6EN; NRFND rows greyed) |
-| Derating knee: full rated power up to | TA knee |  | 70 |  | degC | Note: Printed in the text, not read off the graph. Used by calc.rated_power. | DS p.10, Power derating curve (text: 'above 70 degC, power rating shall be derated') |
-| Derating: 0 % rated power at | TA zero |  | 155 |  | degC | Note: Read off the graph (no printed number). The 155 degC line is used because this part's category range is -55 to +155 degC; the steeper 125 degC line is labelled ERJXG,1G,1R. Linear between knee and zero (graph shape). Curve-based estimate; reading uncertainty not quantified (open item). | DS p.10, Power derating curve (figure: the 155 degC line reaches 0 %) (curve) |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Rated power at 70 degC | P70 |  |  | 0.25 | W | Ambient 70 degC; use with case temperature below the upper category temperature (footnote *1) Note: The catalog prints 0.25 W for ERJ8EN. Printed with no MIN/TYP/MAX label: stored as max (Defaults table). Derated above 70 degC (derate_knee, derate_zero). No abs-max table in this catalog. NRFND row. | DS p.10, Ratings <+/-1 %>, Power rating (70 degC) (W), ERJ8EN row |  |
+| Limiting element voltage | V limit |  |  | 200 | V | Note: Upper limit on RCWV (footnote *2): RCWV = sqrt(Power rating x Resistance value) or this limit, whichever is less. See rcwv_rule. | DS p.10, Ratings <+/-1 %>, Limiting element voltage (V), ERJ8EN row |  |
+| Maximum overload voltage | V overload |  |  | 400 | V | Note: Upper limit on the overload test voltage (footnote *3): OTV = specified magnification x RCWV or this limit, whichever is less. | DS p.10, Ratings <+/-1 %>, Maximum overload voltage (V), ERJ8EN row |  |
+| Rated continuous working voltage, RCWV | RCWV |  | sqrt(Power rating x Resistance value), or limiting element voltage, whichever less |  | V | Note: Formula, not a number. calc.py rated_voltage implements it. | DS p.10, Ratings <+/-1 %>, footnote *2 |  |
+| Category temperature range | T category | -55 |  | 155 | degC | Note: Read as ambient, the axis of the derating figure (DS p.10). Ratings are for the case temperature below this limit (footnote *1). | DS p.10, Ratings <+/-1 %>, Category temperature range (degC), ERJ8EN row (merged cell with ERJ2RK, ERJ3EK, ERJ6EN; NRFND rows greyed) |  |
+| Derating knee: full rated power up to | TA knee |  | 70 |  | degC | Note: Printed in the text, not read off the graph. Used by calc.rated_power. | DS p.10, Power derating curve (text: 'above 70 degC, power rating shall be derated') |  |
+| Derating: 0 % rated power at | TA zero |  | 155 |  | degC | Note: Read off the graph (no printed number). The 155 degC line is used because this part's category range is -55 to +155 degC; the steeper 125 degC line is labelled ERJXG,1G,1R. Linear between knee and zero (graph shape). Curve-based estimate; reading uncertainty not quantified (open item). | DS p.10, Power derating curve (figure: the 155 degC line reaches 0 %) (curve) |  |
 
 ## Parameters: electrical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Resistance tolerance, code F | TOL | -1 |  | 1 | % | Resistance measured at 20 degC (catalog p.11, Performance <+/-1 %> (F), Resistance row) Note: Reference temperature 20 degC from the Performance table; the T.C.R. test runs from +25 degC (DS p.11). | DS p.10, Ratings <+/-1 %>, Resistance tolerance (%), ERJ8EN row; DS p.9, tolerance code F = +/-1 % |
-| Resistance range |  | 10 |  | 2200000 | ohm | E24, E96 values Note: Printed '10 to 2.2 M' in the ohm column; 2.2 M is written out as 2200000 ohm. Values below 100 ohm use the R decimal code (DS p.9), see calc.mpn. NRFND row. | DS p.10, Ratings <+/-1 %>, Resistance range (ohm), ERJ8EN row '10 to 2.2 M' |
-| Temperature coefficient of resistance, 10 ohm to 2.2 Mohm | TCR | -100 |  | 100 | ppm/degC | Resistance 10 ohm to 2.2 Mohm; T.C.R. test at +25 degC / +155 degC (DS p.11, Performance <+/-1 %> (F), T. C. R. row) Note: Printed +/-100 x10-6/K (= ppm/degC): stored as min = -100, max = 100. One TCR for the full +/-1 % range (the catalog's single +/-100 cell covers ERJ2RK through ERJ1TN). The catalog does not state the TCR reference temperature. Use this key for any value in 10 ohm to 2.2 Mohm. | DS p.10, Ratings <+/-1 %>, T.C.R. (x10-6/K), ERJ8EN row (+/-100, one value for the whole +/-1 % range) |
-| Resistance change, overload |  | -2 |  | 2 | % | Rated voltage x 2.5, 5 s Note: Printed +/-2 %. The 8EN row is printed grey in the Performance block (NRFND). | DS p.11, Performance, ERJ XGN, 1GN, 1GJ, 2RC, 2RK, 3EK, 6EN, 8EN, 14N, 12N, 12S, 1TN series: +/-1 % (F), Overload |
-| Resistance change, resistance to soldering heat |  | -1 |  | 1 | % | 270 degC, 10 s Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, Resistance to soldering heat |
-| Resistance change, rapid change of temperature |  | -1 |  | 1 | % | -55 degC (30 min) / +155 degC (30 min), 100 cycles Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, Rapid change of temperature |
-| Resistance change, high temperature exposure |  | -1 |  | 1 | % | +155 degC, 1000 h Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, High temperature exposure |
-| Resistance change, damp heat, steady state |  | -1 |  | 1 | % | 60 degC, 90 % to 95 %RH, 1000 h Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, Damp heat, Steady state |
-| Resistance change, load life in humidity |  | -2 |  | 2 | % | 60 degC, 90 % to 95 %RH, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS p.11, Performance, +/-1 % (F) block, Load life in humidity |
-| Resistance change, endurance at 70 degC |  | -2 |  | 2 | % | 70 degC, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS p.11, Performance, +/-1 % (F) block, Endurance at 70 degC |
-| AEC-Q200 grade |  |  | Grade 0 |  |  | Note: Informational. Grade column of the Ratings table only; the row is printed grey (NRFND). | DS p.10, Ratings <+/-1 %>, AEC-Q200 Grade, ERJ8EN row (grey, NRFND) |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Resistance tolerance, code F | TOL | -1 |  | 1 | % | Resistance measured at 20 degC (catalog p.11, Performance <+/-1 %> (F), Resistance row) Note: Reference temperature 20 degC from the Performance table; the T.C.R. test runs from +25 degC (DS p.11). | DS p.10, Ratings <+/-1 %>, Resistance tolerance (%), ERJ8EN row; DS p.9, tolerance code F = +/-1 % |  |
+| Resistance range |  | 10 |  | 2200000 | ohm | E24, E96 values Note: Printed '10 to 2.2 M' in the ohm column; 2.2 M is written out as 2200000 ohm. Values below 100 ohm use the R decimal code (DS p.9), see calc.mpn. NRFND row. | DS p.10, Ratings <+/-1 %>, Resistance range (ohm), ERJ8EN row '10 to 2.2 M' |  |
+| Temperature coefficient of resistance, 10 ohm to 2.2 Mohm | TCR | -100 |  | 100 | ppm/degC | Resistance 10 ohm to 2.2 Mohm; T.C.R. test at +25 degC / +155 degC (DS p.11, Performance <+/-1 %> (F), T. C. R. row) Note: Printed +/-100 x10-6/K (= ppm/degC): stored as min = -100, max = 100. One TCR for the full +/-1 % range (the catalog's single +/-100 cell covers ERJ2RK through ERJ1TN). The catalog does not state the TCR reference temperature. Use this key for any value in 10 ohm to 2.2 Mohm. | DS p.10, Ratings <+/-1 %>, T.C.R. (x10-6/K), ERJ8EN row (+/-100, one value for the whole +/-1 % range) |  |
+| Resistance change, overload |  | -2 |  | 2 | % | Rated voltage x 2.5, 5 s Note: Printed +/-2 %. The 8EN row is printed grey in the Performance block (NRFND). | DS p.11, Performance, ERJ XGN, 1GN, 1GJ, 2RC, 2RK, 3EK, 6EN, 8EN, 14N, 12N, 12S, 1TN series: +/-1 % (F), Overload |  |
+| Resistance change, resistance to soldering heat |  | -1 |  | 1 | % | 270 degC, 10 s Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, Resistance to soldering heat |  |
+| Resistance change, rapid change of temperature |  | -1 |  | 1 | % | -55 degC (30 min) / +155 degC (30 min), 100 cycles Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, Rapid change of temperature |  |
+| Resistance change, high temperature exposure |  | -1 |  | 1 | % | +155 degC, 1000 h Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, High temperature exposure |  |
+| Resistance change, damp heat, steady state |  | -1 |  | 1 | % | 60 degC, 90 % to 95 %RH, 1000 h Note: Printed +/-1 %. | DS p.11, Performance, +/-1 % (F) block, Damp heat, Steady state |  |
+| Resistance change, load life in humidity |  | -2 |  | 2 | % | 60 degC, 90 % to 95 %RH, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS p.11, Performance, +/-1 % (F) block, Load life in humidity |  |
+| Resistance change, endurance at 70 degC |  | -2 |  | 2 | % | 70 degC, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS p.11, Performance, +/-1 % (F) block, Endurance at 70 degC |  |
+| AEC-Q200 grade |  |  | Grade 0 |  |  | Note: Informational. Grade column of the Ratings table only; the row is printed grey (NRFND). | DS p.10, Ratings <+/-1 %>, AEC-Q200 Grade, ERJ8EN row (grey, NRFND) |  |
 
 ## Parameters: mechanical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Body length | L | 3.0 | 3.2 | 3.25 | mm | Note: Printed 3.20+0.05/-0.20: min = 3.00, max = 3.25. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column L |
-| Body width | W | 1.45 | 1.6 | 1.65 | mm | Note: Printed 1.60+0.05/-0.15: min = 1.45, max = 1.65. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column W |
-| Terminal width, a | a | 0.3 | 0.5 | 0.7 | mm | Note: Printed 0.50+/-0.20. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column a |
-| Terminal width, b | b | 0.3 | 0.5 | 0.7 | mm | Note: Printed 0.50+/-0.20. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column b |
-| Terminal thickness, T | T | 0.5 | 0.6 | 0.7 | mm | Note: Printed 0.60+/-0.10. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column T |
-| Mass (reference) |  |  | 10 |  | mg | Reference value, per part Note: 10 g per 1000 pcs = 10 mg per part (per-part value in mg keeps the printed digits). Reference only, not a bound. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), Mass (Weight) (Reference) (g/1000 pcs) = 10 |
-| Land pattern dimension a (DS land pattern table, rectangular type) | a | 2.0 |  | 2.4 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. Inferred meaning: inner gap between lands (inferred; letter label only). The footprint uses the middle of the range. | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'General purpose type (ERJ)' key, row 1206 (3216), column a |
-| Land pattern dimension b (DS land pattern table, rectangular type) | b | 4.4 |  | 5.0 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. Inferred meaning: outer span of the two lands (inferred). The footprint uses the middle of the range. | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'General purpose type (ERJ)' key, row 1206 (3216), column b |
-| Land pattern dimension c (DS land pattern table, rectangular type) | c | 1.2 |  | 1.8 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. Inferred meaning: land width (inferred). The footprint uses the middle of the range. | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'General purpose type (ERJ)' key, row 1206 (3216), column c |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Body length | L | 3.0 | 3.2 | 3.25 | mm | Note: Printed 3.20+0.05/-0.20: min = 3.00, max = 3.25. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column L |  |
+| Body width | W | 1.45 | 1.6 | 1.65 | mm | Note: Printed 1.60+0.05/-0.15: min = 1.45, max = 1.65. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column W |  |
+| Terminal width, a | a | 0.3 | 0.5 | 0.7 | mm | Note: Printed 0.50+/-0.20. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column a |  |
+| Terminal width, b | b | 0.3 | 0.5 | 0.7 | mm | Note: Printed 0.50+/-0.20. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column b |  |
+| Terminal thickness, T | T | 0.5 | 0.6 | 0.7 | mm | Note: Printed 0.60+/-0.10. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), column T |  |
+| Mass (reference) |  |  | 10 |  | mg | Reference value, per part Note: 10 g per 1000 pcs = 10 mg per part (per-part value in mg keeps the printed digits). Reference only, not a bound. NRFND row. | DS p.11, Dimensions (mm) table, row ERJ8EN (1206), Mass (Weight) (Reference) (g/1000 pcs) = 10 |  |
+| Land pattern dimension a (DS land pattern table, rectangular type) | a | 2.0 |  | 2.4 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. Inferred meaning: inner gap between lands (inferred; letter label only). The footprint uses the middle of the range. | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'General purpose type (ERJ)' key, row 1206 (3216), column a |  |
+| Land pattern dimension b (DS land pattern table, rectangular type) | b | 4.4 |  | 5.0 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. Inferred meaning: outer span of the two lands (inferred). The footprint uses the middle of the range. | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'General purpose type (ERJ)' key, row 1206 (3216), column b |  |
+| Land pattern dimension c (DS land pattern table, rectangular type) | c | 1.2 |  | 1.8 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. Inferred meaning: land width (inferred). The footprint uses the middle of the range. | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'General purpose type (ERJ)' key, row 1206 (3216), column c |  |
 
 ## Limits of this data
 

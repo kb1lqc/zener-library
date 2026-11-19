@@ -254,6 +254,7 @@ def build(pdf, out_dir, figures, crops):
     doc["pdf_abspath"] = os.path.abspath(pdf)
     doc["page_count"] = len(pages)
     doc["printed_page_offset"] = offset
+    doc["printed_pages"] = {str(pdf_page): printed_page for pdf_page, printed_page in sorted(printed.items())}
 
     hits = {}  # item key -> list of hit dicts
     meta = {}

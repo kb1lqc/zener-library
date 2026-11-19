@@ -14,7 +14,7 @@ from .units import to_si
 ROOT = Path(__file__).resolve().parent.parent
 # Param fields that are copied from the TOML as-is.
 META = ("name", "symbol", "kind", "scope", "conditions", "cite", "note", "min_ref", "max_ref", "typ_ref", "curve", "text",
-        "verified")
+        "verified", "verification_type")
 _USED = {}  # "<Value>:<key>" -> verified (None = unverified), for every row an analysis has read this process
 
 

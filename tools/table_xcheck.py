@@ -233,7 +233,7 @@ def line_symbol_x(lab, h):
     return out
 
 
-def one_row(row, sym, lines, hlist):
+def matching_rows(sym, lines, hlist):
     want = re.sub(r"\s+", "", norm_minus(sym))
     cands = []
     for i, ln in enumerate(lines):
@@ -245,6 +245,102 @@ def one_row(row, sym, lines, hlist):
             continue
         if any(sym_at(lab, k) == want for k, _x in line_symbol_x(lab, h)):
             cands.append((i, ln, h))
+    return cands
+
+
+def locate_row_bbox(page, sym):
+    """Return a conservative PDF-point crop box for one isolated symbol row, else None."""
+    lines = y_lines(page)
+    headers = find_headers(page)
+    cands = matching_rows(sym, lines, headers)
+    if len(cands) != 1:
+        return None
+    i, ln, h = cands[0]
+    lab, cells, unit, bad = split_line(ln, h)
+    values, reason = parse_cells(cells)
+    if bad or reason or not any(value is not None for value in values.values()):
+        return None
+    pitch = (ln["y1"] - ln["y0"]) * 1.7
+    sx = [x for _k, x in line_symbol_x(lab, h)]
+    top = ln["y0"] - 4
+    crop_words = list(ln["words"])
+    if 0 <= ln["ymid"] - h["y1"] <= 55:
+        top = min(top, h["y0"] - 3)
+        header_y = (h["y0"] + h["y1"]) / 2
+        crop_words.extend(
+            word for line in page["lines"] for word in line["words"]
+            if abs((word[1] + word[3]) / 2 - header_y) < 3
+        )
+    for j in (i - 1, i + 1):
+        if 0 <= j < len(lines):
+            other = lines[j]
+            if abs(other["ymid"] - ln["ymid"]) <= pitch and head_for(headers, other["ymid"]) is h:
+                olab, ocells, ounit, _obad = split_line(other, h)
+                if olab and any(abs(olab[0][0] - x) < 6 for x in sx):
+                    continue
+                oval, owhy = parse_cells(ocells)
+                if owhy or any(value is not None for value in (oval or {}).values()) or olab or ounit:
+                    return None
+    x0 = max(0.0, min(word[0] for word in crop_words) - 4)
+    x1 = min(page["w"], max(word[2] for word in crop_words) + 4)
+    return [x0, max(0.0, top), x1, min(page["h"], ln["y1"] + 4)]
+
+
+def locate_evidence_bboxes(page, row, cite):
+    """Find visual evidence regions from the cited row label, symbol, or name; never compare values."""
+    lines = y_lines(page)
+    headers = find_headers(page)
+    symbol = re.sub(r"[^a-z0-9]", "", norm_minus(str(row.get("symbol", ""))).lower())
+    stopwords = {"a", "and", "at", "for", "of", "on", "per", "pins", "row", "the", "to", "value"}
+    labels = [
+        set(re.findall(r"[a-z0-9]+", str(text).lower()))
+        for text in (row.get("name", ""), (cite or "").rsplit(",", 1)[-1])
+    ]
+    labels = [{word for word in words if len(word) > 1 and word not in stopwords and not word.isdigit()}
+              for words in labels]
+    candidates = []
+    for i, line in enumerate(lines):
+        text = " ".join(word[4] for word in line["words"])
+        normalized = re.sub(r"[^a-z0-9]", "", norm_minus(text).lower())
+        words = set(re.findall(r"[a-z0-9]+", text.lower()))
+        name_score = len(labels[0] & words) / len(labels[0]) if labels[0] else 0
+        cite_score = len(labels[1] & words) / len(labels[1]) if labels[1] else 0
+        symbol_match = bool(symbol and symbol in normalized)
+        if symbol_match or name_score >= 0.6 or cite_score >= 0.6:
+            candidates.append((i, line, int(symbol_match) * 10 + name_score * 3 + cite_score * 4))
+    if not candidates:
+        return []
+    best = max(item[2] for item in candidates)
+    matches = [item for item in candidates if item[2] >= best - 1]
+    boxes = []
+    for i, line, _score in matches:
+        included = [line]
+        for j in (i - 1, i + 1):
+            if 0 <= j < len(lines) and abs(lines[j]["ymid"] - line["ymid"]) <= 24:
+                included.append(lines[j])
+        crop_words = [word for item in included for word in item["words"]]
+        header = head_for(headers, line["ymid"])
+        top = line["y0"] - 4
+        if header and 0 <= line["ymid"] - header["y1"] <= 55:
+            top = min(top, header["y0"] - 3)
+            header_y = (header["y0"] + header["y1"]) / 2
+            crop_words.extend(
+                word for text_line in page["lines"] for word in text_line["words"]
+                if abs((word[1] + word[3]) / 2 - header_y) < 3
+            )
+        box = [
+            max(0.0, min(word[0] for word in crop_words) - 4),
+            max(0.0, top),
+            min(page["w"], max(word[2] for word in crop_words) + 4),
+            min(page["h"], max(item["y1"] for item in included) + 4),
+        ]
+        if not any(abs(box[1] - old[1]) < 8 and abs(box[3] - old[3]) < 8 for old in boxes):
+            boxes.append(box)
+    return boxes
+
+
+def one_row(row, sym, lines, hlist):
+    cands = matching_rows(sym, lines, hlist)
     if not cands:
         return "UNSURE", "symbol not found as the first/Symbol-column word of any table line"
     if len(cands) > 1:

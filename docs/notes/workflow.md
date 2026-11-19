@@ -37,16 +37,24 @@ Check that every download is for the datasheet's part and package before using i
    courtyard 0.25 mm beyond the larger of pads and body, pin-1 marker. Never draw from scratch.
 3. **Extract:** every ratings, operating, thermal and electrical row. Extract text locally (`pdftotext -layout`) and
    confirm key tables, pinouts, land patterns and curves on page images.
-4. **Equations:** one function per datasheet equation; `EXAMPLES` reproduce the datasheet's numbers;
+4. **Human review:** run one command to create per-parameter PDF snippets, section/table/figure coverage, and a pending record:
+   `python3 tools/ds_review_packet.py docs/datasheets/<datasheet>.pdf components/<Manufacturer>/<Value> --out temporary/<Value>-review --archive`.
+   Compare each row with its cited page image and complete both `datasheet-review.md` and `coverage.md`.
+   `AGREE_TEXT_CHECK` is not verification. For each Confirmed `[param.<key>]`, add `verified = "<who> <date> human page-image review"`
+   and `verification_type = "human_page_image"`; use `cross_model_page_image` for cross-model audits. Text checks
+   are never verification stamps. `lib.check` validates format, not the truth of the attestation.
+   Finalize with `python3 tools/ds_review_packet.py --finalize components/<Manufacturer>/<Value>/datasheet-review/<PDF-SHA-prefix>`.
+   It enforces reviewer/date, all per-row decisions, coverage accounting, and matching human stamps. Remove or renew a stamp if its value changes.
+5. **Equations:** one function per datasheet equation; `EXAMPLES` reproduce the datasheet's numbers;
    non-datasheet helpers say `Not a DS equation:`.
-5. **Zener:** check fields on every abs-max and rec-op row, generate the wrapper, write a harness and `CASES`
+6. **Zener:** check fields on every abs-max and rec-op row, generate the wrapper, write a harness and `CASES`
    (nominal pass, each limit failing, waiver, unset net, ambient). Flip one case to prove the tests are live.
-6. **Verify:** a fresh independent verifier, then an adversarial review. Apply findings that cite the datasheet,
+7. **Verify:** a fresh independent verifier, then an adversarial review. Apply findings that cite the datasheet,
    log the rest, and re-review scripted bulk fixes.
-7. **Run, in order:** `python3 -m lib.check` -> `python3 -m lib.zen` -> `python3 -m lib.readme` ->
+8. **Run, in order:** `python3 -m lib.check` -> `python3 -m lib.zen` -> `python3 -m lib.readme` ->
    `pcb build -Wstyle -Dwarnings components/<Mfr>/<Value>` -> `python3 -m unittest discover -s tests`.
    All must pass with 0 errors and 0 warnings.
-8. **Report and commit:** evidence, decision log, open items; add the part to the README parts table.
+9. **Report and commit:** evidence, decision log, open items; add the part to the README parts table.
 
 ## Standing rules
 - Never guess a number. A value the datasheet doesn't print (including a part-number code) is excluded and logged.
@@ -54,3 +62,8 @@ Check that every download is for the datasheet's part and package before using i
 - Conflicting reference sheets in one series: the newest-format sheet wins, and the older values are logged.
 - `scope = "partial"` marks rows that apply only under a condition the checker can't see (waivable warning).
 - Derating policy is deferred to a dedicated NASA EEE-INST-002 effort.
+
+For local PDF snippets beside each part and an editable pending human-review record, see
+[datasheet-review.md](../spec/datasheet-review.md). The packet generator is SHADOW: it does not edit component data or post its GitHub Markdown drafts. The typed
+`verified` stamp is the system signal; the archive retains evidence and the finalize command gates its human-reviewed
+label. README badges count human page-image reviews separately from cross-model or legacy stamps.

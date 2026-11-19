@@ -1,4 +1,5 @@
 import tempfile
+import tomllib
 import unittest
 from pathlib import Path
 from shutil import copytree
@@ -223,8 +224,56 @@ class TestLoadNew(unittest.TestCase):
         with self.assertRaises(ValueError):
             to_param({"sym": True, "min": 1, "unit": "V"})
 
+    def test_verification_type_loads_into_param(self):
+        from lib.component import to_param
+        param = to_param({
+            "unit": "V",
+            "verified": "abrown 2026-11-19 human page-image review",
+            "verification_type": "human_page_image",
+        })
+        self.assertEqual(param.verification_type, "human_page_image")
+
 
 class TestReadme(unittest.TestCase):
+    def test_review_badge_counts_stamps_and_links_archive(self):
+        with tempfile.TemporaryDirectory() as d:
+            copy = copy_fixture(d, [
+                ('name = "Reference voltage"',
+                 'name = "Reference voltage"\nverified = "abrown 2026-11-19 page-image review"\n'
+                 'verification_type = "human_page_image"'),
+            ])
+            rows = tomllib.loads((copy / "component.toml").read_text())["param"]
+            total = len(rows)
+            text = readme.build(copy)
+            self.assertIn(f"Human page-image review: 1/{total} human", text)
+            self.assertIn(f"human%20review-1%2F{total}%20human-yellow", text)
+            self.assertIn("cross-model audits: 0", text)
+            self.assertIn("| human page-image review: abrown 2026-11-19 page-image review |", text)
+
+            (copy / "datasheet-review").mkdir()
+            self.assertIn("](datasheet-review/)", readme.build(copy))
+
+    def test_cross_model_stamp_is_not_counted_as_human(self):
+        with tempfile.TemporaryDirectory() as d:
+            copy = copy_fixture(d, [
+                ('name = "Reference voltage"',
+                 'name = "Reference voltage"\nverified = "sonnet-audit 2026-11-18 blind cross-model page-image review"'),
+            ])
+            text = readme.build(copy)
+            self.assertIn("Human page-image review: 0/", text)
+            self.assertIn("cross-model audits: 1", text)
+            self.assertIn("cross-model page-image audit:", text)
+
+    def test_typed_review_without_stamp_is_not_counted(self):
+        with tempfile.TemporaryDirectory() as d:
+            copy = copy_fixture(d, [
+                ('name = "Reference voltage"',
+                 'name = "Reference voltage"\nverification_type = "human_page_image"'),
+            ])
+            text = readme.build(copy)
+            self.assertIn("Human page-image review: 0/", text)
+            self.assertEqual(readme.verification_label({"verification_type": "human_page_image"}), "")
+
     def test_new_rendering(self):
         text = readme.build(FIX / "LDO1")
         self.assertIn("| Output offset | VOS |  | \u00b110 | \u00b140 | uV |", text)  # sym
@@ -244,7 +293,11 @@ class TestReadme(unittest.TestCase):
         self.assertTrue(text.startswith("<!-- GENERATED - do not edit"))
         self.assertIn("| 3 | OUT | power_out | Output | DS p.3, Pin Functions, OUT |", text)
         self.assertIn("## Parameters: abs_max", text)
-        self.assertIn("| Reference voltage |  | 990 | 1000 | 1010 | mV | TA = 25 degC \\| IL = 1 mA Note: Characterized |", text)
+        self.assertIn(
+            "| Reference voltage |  | 990 | 1000 | 1010 | mV | TA = 25 degC \\| IL = 1 mA Note: Characterized | "
+            "DS p.5, Electrical Characteristics, VREF |  |",
+            text,
+        )
         self.assertIn("### `vout`", text)
         self.assertNotIn("_hidden", text)
         self.assertIn("| vout(vref=1, r1=10000, r2=10000) | 2 | 2 | 0.001 | pass |", text)

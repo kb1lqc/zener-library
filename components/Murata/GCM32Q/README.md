@@ -2,6 +2,12 @@
 
 # GCM32Q
 
+## Datasheet review
+
+[![Human page-image review: 0/5 human](https://img.shields.io/badge/human%20review-0%2F5%20human-lightgrey)](../../../docs/spec/datasheet-review.md)
+
+Human page-image review: 0/5; cross-model audits: 0; manufacturer-export stamps: 0; legacy/unclassified: 0. Text checks are not verification. `lib.check` validates stamp format, not that review occurred.
+
 ## Part
 
 - **manufacturer**: Murata
@@ -37,23 +43,23 @@
 
 ## Parameters: rec_op
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Operating temperature range |  | -55 |  | 125 | degC | Applies to: dielectric X7R. Note: Read from the 1210 X7R sheet GCM32ER71C226ME19-01A. lib.catalog refuses an export row whose Operating Temperature is not -55 to 125 degC, so every X7R catalog row uses it. | DS p.2 (GCM32ER71C226ME19-01A-EN.pdf), Rated Value, Operating Temp. Range (-55 to 125 degC) |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Operating temperature range |  | -55 |  | 125 | degC | Applies to: dielectric X7R. Note: Read from the 1210 X7R sheet GCM32ER71C226ME19-01A. lib.catalog refuses an export row whose Operating Temperature is not -55 to 125 degC, so every X7R catalog row uses it. | DS p.2 (GCM32ER71C226ME19-01A-EN.pdf), Rated Value, Operating Temp. Range (-55 to 125 degC) |  |
 
 ## Parameters: electrical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Temperature characteristic, R7 (X7R) | TC | -15 |  | 15 | % | Ref. temp 25 degC; temp range -55 to 125 degC; capacitance change over temperature Applies to: dielectric X7R. Note: Public STD code X7R (EIA). Capacitance change over temperature, not a DC-bias or aging limit. Read from the 1210 X7R sheet of thickness code E, used for every X7R catalog row of thickness code Q (open item: no X7R sheet for thickness code Q). | DS p.2 (GCM32ER71C226ME19-01A-EN.pdf), Rated Value, Temp. coeff. or Cap. Change (-15 to 15 %) |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Temperature characteristic, R7 (X7R) | TC | -15 |  | 15 | % | Ref. temp 25 degC; temp range -55 to 125 degC; capacitance change over temperature Applies to: dielectric X7R. Note: Public STD code X7R (EIA). Capacitance change over temperature, not a DC-bias or aging limit. Read from the 1210 X7R sheet of thickness code E, used for every X7R catalog row of thickness code Q (open item: no X7R sheet for thickness code Q). | DS p.2 (GCM32ER71C226ME19-01A-EN.pdf), Rated Value, Temp. coeff. or Cap. Change (-15 to 15 %) |  |
 
 ## Parameters: mechanical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Land pattern dimension a (reflow) | a | 2.0 |  | 2.4 | mm | Reflow soldering, chip 3.2x2.5, code 32 Note: Letter label only in the DS figure; neutral name. Inferred meaning: gap between lands (not printed). | DS p.28 (GCM32ER71C226ME19-01A-EN.pdf), 2. Land Dimensions, Table 2 Reflow Soldering Method, 3.2x2.5, a |
-| Land pattern dimension b (reflow) | b | 1.0 |  | 1.2 | mm | Reflow soldering, chip 3.2x2.5, code 32 Note: Letter label only in the DS figure; neutral name. Inferred meaning: land length, outer side (not printed). | DS p.28 (GCM32ER71C226ME19-01A-EN.pdf), 2. Land Dimensions, Table 2 Reflow Soldering Method, 3.2x2.5, b |
-| Land pattern dimension c (reflow) | c | 1.8 |  | 2.3 | mm | Reflow soldering, chip 3.2x2.5, code 32 Note: Letter label only in the DS figure; neutral name. Inferred meaning: land width across the chip (not printed). | DS p.28 (GCM32ER71C226ME19-01A-EN.pdf), 2. Land Dimensions, Table 2 Reflow Soldering Method, 3.2x2.5, c |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Land pattern dimension a (reflow) | a | 2.0 |  | 2.4 | mm | Reflow soldering, chip 3.2x2.5, code 32 Note: Letter label only in the DS figure; neutral name. Inferred meaning: gap between lands (not printed). | DS p.28 (GCM32ER71C226ME19-01A-EN.pdf), 2. Land Dimensions, Table 2 Reflow Soldering Method, 3.2x2.5, a |  |
+| Land pattern dimension b (reflow) | b | 1.0 |  | 1.2 | mm | Reflow soldering, chip 3.2x2.5, code 32 Note: Letter label only in the DS figure; neutral name. Inferred meaning: land length, outer side (not printed). | DS p.28 (GCM32ER71C226ME19-01A-EN.pdf), 2. Land Dimensions, Table 2 Reflow Soldering Method, 3.2x2.5, b |  |
+| Land pattern dimension c (reflow) | c | 1.8 |  | 2.3 | mm | Reflow soldering, chip 3.2x2.5, code 32 Note: Letter label only in the DS figure; neutral name. Inferred meaning: land width across the chip (not printed). | DS p.28 (GCM32ER71C226ME19-01A-EN.pdf), 2. Land Dimensions, Table 2 Reflow Soldering Method, 3.2x2.5, c |  |
 
 ## Limits of this data
 

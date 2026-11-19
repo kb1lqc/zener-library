@@ -75,6 +75,31 @@ class TestAllowlist(unittest.TestCase):
         self.assertIsNone(rules.split_message("pin 3: name mismatch"))
 
 
+class TestVerificationProvenance(unittest.TestCase):
+    def test_explicit_types_require_a_valid_stamp(self):
+        data = {"param": {"vref": {
+            "verified": "abrown 2026-11-19 page-image review",
+            "verification_type": "human_page_image",
+        }}}
+        self.assertEqual(rules.verified_findings(data), [])
+
+    def test_rejects_unknown_or_orphaned_types(self):
+        unknown = rules.verified_findings({"param": {"vref": {
+            "verified": "abrown 2026-11-19 page-image review",
+            "verification_type": "text_check",
+        }}})
+        self.assertEqual([finding.rule for finding in unknown], ["verification-type"])
+        orphaned = rules.verified_findings({"param": {"vref": {
+            "verification_type": "human_page_image",
+        }}})
+        self.assertEqual([finding.rule for finding in orphaned], ["verification-type"])
+
+    def test_legacy_stamp_remains_accepted(self):
+        self.assertEqual(rules.verified_findings({"param": {
+            "vref": {"verified": "sonnet-audit 2026-11-18 cross-model page-image review"},
+        }}), [])
+
+
 class TestMain(unittest.TestCase):
     def run_main(self, argv, components, others=(), wiring=()):
         out = io.StringIO()

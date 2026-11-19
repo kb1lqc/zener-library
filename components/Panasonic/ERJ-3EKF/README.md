@@ -2,6 +2,12 @@
 
 # ERJ-3EKF
 
+## Datasheet review
+
+[![Human page-image review: 0/24 human](https://img.shields.io/badge/human%20review-0%2F24%20human-lightgrey)](../../../docs/spec/datasheet-review.md)
+
+Human page-image review: 0/24; cross-model audits: 15; manufacturer-export stamps: 0; legacy/unclassified: 0. Text checks are not verification. `lib.check` validates stamp format, not that review occurred.
+
 ## Part
 
 - **alternates**: []
@@ -48,42 +54,42 @@ Rated voltage at decade values, computed from `p70`, `v_limit` and the formula a
 
 ## Parameters: rec_op
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Rated power at 70 degC | P70 |  |  | 0.1 | W | Ambient 70 degC; use with case temperature below the upper category temperature (footnote *1) Note: The DS prints 0.1 W for ERJ3EK (same for 0402 and 0603 in this series). Printed with no MIN/TYP/MAX label: stored as max (Defaults table). Derated above 70 degC (derate_knee, derate_zero). No abs-max table in this DS. | DS PDF p.3, Ratings <+/-1 %>, Power rating (70 degC) (W), ERJ3EK row |
-| Limiting element voltage | V limit |  |  | 75 | V | Note: Upper limit on RCWV (footnote *2): RCWV = sqrt(Power rating x Resistance value) or this limit, whichever is less. See rcwv_rule. | DS PDF p.3, Ratings <+/-1 %>, Limiting element voltage (V), ERJ3EK row |
-| Maximum overload voltage | V overload |  |  | 150 | V | Note: Upper limit on the overload test voltage (footnote *3): OTV = specified magnification x RCWV or this limit, whichever is less. | DS PDF p.3, Ratings <+/-1 %>, Maximum overload voltage (V), ERJ3EK row |
-| Rated continuous working voltage, RCWV | RCWV |  | sqrt(Power rating x Resistance value), or limiting element voltage, whichever less |  | V | Note: Formula, not a number. calc.py rated_voltage implements it. | DS PDF p.3, Ratings <+/-1 %>, footnote *2 |
-| Category temperature range | T category | -55 |  | 155 | degC | Note: Read as ambient, the axis of the derating figure (DS PDF p.3). Ratings are for the case temperature below this limit (footnote *1). | DS PDF p.3, Ratings <+/-1 %>, Category temperature range (degC), ERJ3EK row (shared with ERJ2RK and ERJ6EN) |
-| Derating knee: full rated power up to | TA knee |  | 70 |  | degC | Note: Printed in the text, not read off the graph. Used by calc.rated_power. | DS PDF p.3, Power derating curve (text: 'above 70 degC, power rating shall be derated') |
-| Derating: 0 % rated power at | TA zero |  | 155 |  | degC | Note: Read off the graph (no printed number). The 155 degC line is used because this part's category range is -55 to +155 degC; the steeper 125 degC line is labelled ERJXG,1G,1R. Linear between knee and zero (graph shape). Curve-based estimate; reading uncertainty not quantified (open item). | DS PDF p.3, Power derating curve (figure: the 155 degC line reaches 0 %) (curve) |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Rated power at 70 degC | P70 |  |  | 0.1 | W | Ambient 70 degC; use with case temperature below the upper category temperature (footnote *1) Note: The DS prints 0.1 W for ERJ3EK (same for 0402 and 0603 in this series). Printed with no MIN/TYP/MAX label: stored as max (Defaults table). Derated above 70 degC (derate_knee, derate_zero). No abs-max table in this DS. | DS PDF p.3, Ratings <+/-1 %>, Power rating (70 degC) (W), ERJ3EK row | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Limiting element voltage | V limit |  |  | 75 | V | Note: Upper limit on RCWV (footnote *2): RCWV = sqrt(Power rating x Resistance value) or this limit, whichever is less. See rcwv_rule. | DS PDF p.3, Ratings <+/-1 %>, Limiting element voltage (V), ERJ3EK row | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Maximum overload voltage | V overload |  |  | 150 | V | Note: Upper limit on the overload test voltage (footnote *3): OTV = specified magnification x RCWV or this limit, whichever is less. | DS PDF p.3, Ratings <+/-1 %>, Maximum overload voltage (V), ERJ3EK row |  |
+| Rated continuous working voltage, RCWV | RCWV |  | sqrt(Power rating x Resistance value), or limiting element voltage, whichever less |  | V | Note: Formula, not a number. calc.py rated_voltage implements it. | DS PDF p.3, Ratings <+/-1 %>, footnote *2 |  |
+| Category temperature range | T category | -55 |  | 155 | degC | Note: Read as ambient, the axis of the derating figure (DS PDF p.3). Ratings are for the case temperature below this limit (footnote *1). | DS PDF p.3, Ratings <+/-1 %>, Category temperature range (degC), ERJ3EK row (shared with ERJ2RK and ERJ6EN) | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Derating knee: full rated power up to | TA knee |  | 70 |  | degC | Note: Printed in the text, not read off the graph. Used by calc.rated_power. | DS PDF p.3, Power derating curve (text: 'above 70 degC, power rating shall be derated') | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Derating: 0 % rated power at | TA zero |  | 155 |  | degC | Note: Read off the graph (no printed number). The 155 degC line is used because this part's category range is -55 to +155 degC; the steeper 125 degC line is labelled ERJXG,1G,1R. Linear between knee and zero (graph shape). Curve-based estimate; reading uncertainty not quantified (open item). | DS PDF p.3, Power derating curve (figure: the 155 degC line reaches 0 %) (curve) | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
 
 ## Parameters: electrical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Resistance tolerance, code F | TOL | -1 |  | 1 | % | Resistance measured at 20 degC (DS PDF p.4, Performance <+/-1 %>, Resistance row) Note: Reference temperature 20 degC from the Performance table; the T.C.R. test runs from +25 degC (DS p.4). | DS PDF p.3, Ratings <+/-1 %>, Resistance tolerance (%), ERJ3EK row; DS PDF p.2, tolerance code F = +/-1 % |
-| Resistance range |  | 10 |  | 1000000 | ohm | E24, E96 values Note: Printed '10 to 1 M' in the ohm column; 1 M is written out as 1000000 ohm. Values below 100 ohm use the R decimal code (DS p.2), see calc.mpn. | DS PDF p.3, Ratings <+/-1 %>, Resistance range (ohm), ERJ3EK row '10 to 1 M' |
-| Temperature coefficient of resistance, 10 ohm to 1 Mohm | TCR | -100 |  | 100 | ppm/degC | Resistance 10 ohm to 1 Mohm; T.C.R. test at +25 degC / +155 degC (DS PDF p.4) Note: Printed +/-100 x10-6/K (= ppm/degC): stored as min = -100, max = 100. One TCR for the full +/-1 % range. The DS does not state the TCR reference temperature. Use this key for any value in 10 ohm to 1 Mohm. | DS PDF p.3, Ratings <+/-1 %>, T.C.R. (x10-6/K), ERJ3EK row (+/-100, one value for the whole 10 to 1 M range) |
-| Resistance change, overload |  | -2 |  | 2 | % | Rated voltage x 2.5, 5 s Note: Printed +/-2 %. | DS PDF p.4, Performance, ERJ XGN...2RK...3EK...series +/-1 % (F), Overload |
-| Resistance change, resistance to soldering heat |  | -1 |  | 1 | % | 270 degC, 10 s Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Resistance to soldering heat |
-| Resistance change, rapid change of temperature |  | -1 |  | 1 | % | -55 degC (30 min) / +155 degC (30 min), 100 cycles Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Rapid change of temperature |
-| Resistance change, high temperature exposure |  | -1 |  | 1 | % | +155 degC, 1000 h Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), High temperature exposure |
-| Resistance change, damp heat, steady state |  | -1 |  | 1 | % | 60 degC, 90 % to 95 %RH, 1000 h Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Damp heat, Steady state |
-| Resistance change, load life in humidity |  | -2 |  | 2 | % | 60 degC, 90 % to 95 %RH, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Load life in humidity |
-| Resistance change, endurance at 70 degC |  | -2 |  | 2 | % | 70 degC, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Endurance at 70 degC |
-| AEC-Q200 grade |  |  | Grade 0 |  |  | Note: Informational. DS PDF p.1 Features: AEC-Q200 compliant (except ERJ1R, ERJXG, ERJ1GN). | DS PDF p.3, Ratings <+/-1 %>, AEC-Q200 Grade, ERJ3EK row |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Resistance tolerance, code F | TOL | -1 |  | 1 | % | Resistance measured at 20 degC (DS PDF p.4, Performance <+/-1 %>, Resistance row) Note: Reference temperature 20 degC from the Performance table; the T.C.R. test runs from +25 degC (DS p.4). | DS PDF p.3, Ratings <+/-1 %>, Resistance tolerance (%), ERJ3EK row; DS PDF p.2, tolerance code F = +/-1 % | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Resistance range |  | 10 |  | 1000000 | ohm | E24, E96 values Note: Printed '10 to 1 M' in the ohm column; 1 M is written out as 1000000 ohm. Values below 100 ohm use the R decimal code (DS p.2), see calc.mpn. | DS PDF p.3, Ratings <+/-1 %>, Resistance range (ohm), ERJ3EK row '10 to 1 M' | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Temperature coefficient of resistance, 10 ohm to 1 Mohm | TCR | -100 |  | 100 | ppm/degC | Resistance 10 ohm to 1 Mohm; T.C.R. test at +25 degC / +155 degC (DS PDF p.4) Note: Printed +/-100 x10-6/K (= ppm/degC): stored as min = -100, max = 100. One TCR for the full +/-1 % range. The DS does not state the TCR reference temperature. Use this key for any value in 10 ohm to 1 Mohm. | DS PDF p.3, Ratings <+/-1 %>, T.C.R. (x10-6/K), ERJ3EK row (+/-100, one value for the whole 10 to 1 M range) | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Resistance change, overload |  | -2 |  | 2 | % | Rated voltage x 2.5, 5 s Note: Printed +/-2 %. | DS PDF p.4, Performance, ERJ XGN...2RK...3EK...series +/-1 % (F), Overload |  |
+| Resistance change, resistance to soldering heat |  | -1 |  | 1 | % | 270 degC, 10 s Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Resistance to soldering heat | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Resistance change, rapid change of temperature |  | -1 |  | 1 | % | -55 degC (30 min) / +155 degC (30 min), 100 cycles Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Rapid change of temperature |  |
+| Resistance change, high temperature exposure |  | -1 |  | 1 | % | +155 degC, 1000 h Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), High temperature exposure |  |
+| Resistance change, damp heat, steady state |  | -1 |  | 1 | % | 60 degC, 90 % to 95 %RH, 1000 h Note: Printed +/-1 %. | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Damp heat, Steady state |  |
+| Resistance change, load life in humidity |  | -2 |  | 2 | % | 60 degC, 90 % to 95 %RH, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Load life in humidity |  |
+| Resistance change, endurance at 70 degC |  | -2 |  | 2 | % | 70 degC, rated voltage, 1.5 h ON / 0.5 h OFF cycle, 1000 h Note: Printed +/-2 % (the +/-3 % limit is for ERJXG, 1G only, not this part). | DS PDF p.4, Performance, ERJ XGN...3EK...series +/-1 % (F), Endurance at 70 degC |  |
+| AEC-Q200 grade |  |  | Grade 0 |  |  | Note: Informational. DS PDF p.1 Features: AEC-Q200 compliant (except ERJ1R, ERJXG, ERJ1GN). | DS PDF p.3, Ratings <+/-1 %>, AEC-Q200 Grade, ERJ3EK row |  |
 
 ## Parameters: mechanical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Body length | L | 1.45 | 1.6 | 1.75 | mm | Note: Printed 1.60+/-0.15. The ERJ3E row is shared with ERJ3R in the DS table. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column L |
-| Body width | W | 0.75 | 0.8 | 0.95 | mm | Note: Printed 0.80 +0.15/-0.05 (asymmetric): min = 0.75, max = 0.95 (arithmetic on the printed tolerance). | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column W |
-| Terminal width, a | a | 0.1 | 0.3 | 0.5 | mm | Note: Printed 0.30+/-0.20. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column a |
-| Terminal width, b | b | 0.15 | 0.3 | 0.45 | mm | Note: Printed 0.30+/-0.15. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column b |
-| Terminal thickness, T | T | 0.35 | 0.45 | 0.55 | mm | Note: Printed 0.45+/-0.10. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column T |
-| Mass (reference) |  |  | 2 |  | mg | Reference value, per part Note: 2 g per 1000 pcs = 2 mg per part (per-part value in mg keeps the printed digits). Reference only, not a bound. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), Mass (Weight) (Reference) (g/1000 pcs) = 2 |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Body length | L | 1.45 | 1.6 | 1.75 | mm | Note: Printed 1.60+/-0.15. The ERJ3E row is shared with ERJ3R in the DS table. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column L | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Body width | W | 0.75 | 0.8 | 0.95 | mm | Note: Printed 0.80 +0.15/-0.05 (asymmetric): min = 0.75, max = 0.95 (arithmetic on the printed tolerance). | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column W | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Terminal width, a | a | 0.1 | 0.3 | 0.5 | mm | Note: Printed 0.30+/-0.20. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column a | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Terminal width, b | b | 0.15 | 0.3 | 0.45 | mm | Note: Printed 0.30+/-0.15. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column b | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Terminal thickness, T | T | 0.35 | 0.45 | 0.55 | mm | Note: Printed 0.45+/-0.10. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), column T | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
+| Mass (reference) |  |  | 2 |  | mg | Reference value, per part Note: 2 g per 1000 pcs = 2 mg per part (per-part value in mg keeps the printed digits). Reference only, not a bound. | DS PDF p.4, Dimensions (mm) table, row ERJ3E (0603), Mass (Weight) (Reference) (g/1000 pcs) = 2 | cross-model page-image audit: sonnet-audit 2026-11-18 blind page-image reading, cross-model (diet-work/audit/AUDIT.md) |
 
 ## Limits of this data
 

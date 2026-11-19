@@ -2,6 +2,12 @@
 
 # ERA-6AEB
 
+## Datasheet review
+
+[![Human page-image review: 0/27 human](https://img.shields.io/badge/human%20review-0%2F27%20human-lightgrey)](../../../docs/spec/datasheet-review.md)
+
+Human page-image review: 0/27; cross-model audits: 0; manufacturer-export stamps: 0; legacy/unclassified: 0. Text checks are not verification. `lib.check` validates stamp format, not that review occurred.
+
 ## Part
 
 - **alternates**: []
@@ -47,45 +53,45 @@ Rated voltage at decade values, computed from `p85`, `v_limit` and the formula a
 
 ## Parameters: rec_op
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Power rating at 85 degC | P85 |  |  | 0.125 | W | Ambient 85 degC; use on the condition that the case temperature is below the upper category temperature (footnote *1) Note: Printed 0.125 W for this size (DS p.20). Printed with no MIN/TYP/MAX label: stored as max (Defaults table). Derated above 85 degC (derate_knee, derate_zero). | DS p.20, Ratings, Power rating (85 degC) (W), ERA6AEB row |
-| Limiting element voltage | V limit |  |  | 100 | V | Note: Upper limit on RCWV (footnote *2): RCWV = sqrt(Power rating x Resistance value) or this limit, whichever is less. See rcwv_rule. | DS p.20, Ratings, Limiting element voltage (V), ERA6AEB row |
-| Maximum overload voltage | V overload |  |  | 200 | V | Note: Upper limit on the overload test voltage (footnote *3): OTV = 2.5 x RCWV or this limit, whichever is less. The Performance table (p.21) prints the overload test as rated voltage x 2.5, 5 s. | DS p.20, Ratings, Maximum overload voltage (V), ERA6AEB row |
-| Rated continuous working voltage, RCWV | RCWV |  | sqrt(Power rating x Resistance value), or limiting element voltage, whichever less |  | V | Note: Formula, not a number. calc.py rated_voltage implements it. | DS p.20, Ratings, footnote *2 |
-| Category temperature range | T category | -55 |  | 155 | degC | Note: Read as ambient, the axis of the derating figure (DS p.20). Ratings are for the case temperature below this limit (footnote *1). | DS p.20, Ratings, Category temperature range (degC), all rows of the table (also DS p.19 Features) |
-| Derating knee: full rated power up to | TA knee |  | 85 |  | degC | Note: Printed in the text, not read off the graph. Used by calc.rated_power. | DS p.20, Power derating curve (text: 'above 85 degC, power rating shall be derated') |
-| Derating: 0 % rated power at | TA zero |  | 155 |  | degC | Note: Read off the graph (no printed number). Linear between knee and zero (graph shape). Curve-based estimate; reading uncertainty not quantified (open item). | DS p.20, Power derating curve (figure: the derating line reaches 0 % at the 155 degC label) (curve) |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Power rating at 85 degC | P85 |  |  | 0.125 | W | Ambient 85 degC; use on the condition that the case temperature is below the upper category temperature (footnote *1) Note: Printed 0.125 W for this size (DS p.20). Printed with no MIN/TYP/MAX label: stored as max (Defaults table). Derated above 85 degC (derate_knee, derate_zero). | DS p.20, Ratings, Power rating (85 degC) (W), ERA6AEB row |  |
+| Limiting element voltage | V limit |  |  | 100 | V | Note: Upper limit on RCWV (footnote *2): RCWV = sqrt(Power rating x Resistance value) or this limit, whichever is less. See rcwv_rule. | DS p.20, Ratings, Limiting element voltage (V), ERA6AEB row |  |
+| Maximum overload voltage | V overload |  |  | 200 | V | Note: Upper limit on the overload test voltage (footnote *3): OTV = 2.5 x RCWV or this limit, whichever is less. The Performance table (p.21) prints the overload test as rated voltage x 2.5, 5 s. | DS p.20, Ratings, Maximum overload voltage (V), ERA6AEB row |  |
+| Rated continuous working voltage, RCWV | RCWV |  | sqrt(Power rating x Resistance value), or limiting element voltage, whichever less |  | V | Note: Formula, not a number. calc.py rated_voltage implements it. | DS p.20, Ratings, footnote *2 |  |
+| Category temperature range | T category | -55 |  | 155 | degC | Note: Read as ambient, the axis of the derating figure (DS p.20). Ratings are for the case temperature below this limit (footnote *1). | DS p.20, Ratings, Category temperature range (degC), all rows of the table (also DS p.19 Features) |  |
+| Derating knee: full rated power up to | TA knee |  | 85 |  | degC | Note: Printed in the text, not read off the graph. Used by calc.rated_power. | DS p.20, Power derating curve (text: 'above 85 degC, power rating shall be derated') |  |
+| Derating: 0 % rated power at | TA zero |  | 155 |  | degC | Note: Read off the graph (no printed number). Linear between knee and zero (graph shape). Curve-based estimate; reading uncertainty not quantified (open item). | DS p.20, Power derating curve (figure: the derating line reaches 0 % at the 155 degC label) (curve) |  |
 
 ## Parameters: electrical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Resistance tolerance, code B | TOL | -0.1 |  | 0.1 | % | Resistance measured at 20 degC (DS p.21, Performance, Resistance row) Note: Printed +/-0.1 %. | DS p.20, Ratings, Resistance tolerance (%), ERA6AEB row; DS p.19, tolerance code B = +/-0.1 % |
-| Resistance range (E24, E96) |  | 47 |  | 1000000 | ohm | E24, E96 values (E192 on request, not in this format) Note: The printed range for this size's EB grade, as printed (the range differs by size). Printed in k and M: written out in ohm. Duplicate values follow the E24 part number (DS note *5). Values in E96 below 100 ohm have no printed code (calc.mpn raises). | DS p.20, Ratings, Resistance range (ohm), ERA6AEB row '47 to 1 M (E24,E96)' |
-| Temperature coefficient of resistance, +/-25 ppm/degC | TCR | -25 |  | 25 | ppm/degC | T.C.R. test at +25 degC / +125 degC (DS p.21, Performance) Note: Printed +/-25 x10^-6/K for this size's range (one value for the printed resistance range). Stored as min = -25, max = 25. The DS does not state the reference temperature for the T.C.R.; the Performance test runs from +25 degC. | DS p.20, Ratings, T.C.R. (x10-6/K), ERA6AED, AEC, AEB group, +/-25 (the printed x10^-6/K unit is ppm/degC) |
-| Resistance change, overload |  | -0.1 |  | 0.1 | % | Rated voltage x 2.5, 5 s Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Overload, R>=47 ohm: +/-0.1 % |
-| Resistance change, resistance to soldering heat |  | -0.1 |  | 0.1 | % | 270 degC, 10 s Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Resistance to soldering heat, R>=47 ohm: +/-0.1 % |
-| Resistance change, rapid change of temperature |  | -0.1 |  | 0.1 | % | ERA3A, 6A, 8A: -55 degC (30 min) / +155 degC (30 min), 1000 cycles Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Rapid change of temperature, R>=47 ohm: +/-0.1 % |
-| Resistance change, high temperature exposure |  | -0.1 |  | 0.1 | % | +155 degC, 1000 h Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, High temperature exposure, R>=47 ohm: +/-0.1 % |
-| Resistance change, damp heat, steady state |  | -0.1 |  | 0.1 | % | 85 degC, 85 %RH, 1000 h Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Damp heat, steady state, R>=47 ohm: +/-0.1 % |
-| Resistance change, load life in humidity |  | -0.1 |  | 0.1 | % | 85 degC, 85 %RH, 10 % rated power, 1.5 h ON / 0.5 h OFF, 1000 h; max test voltage 31.6 V (this size) Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Load life in humidity, R>=47 ohm: +/-0.1 % |
-| Resistance change, endurance at 85 degC |  | -0.1 |  | 0.1 | % | 85 degC, rated voltage, 1.5 h ON / 0.5 h OFF, 1000 h Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Endurance at 85 degC, R>=47 ohm: +/-0.1 % |
-| AEC-Q200 grade |  |  | Grade 0 |  |  | Note: Informational. DS p.19 Features: AEC-Q200 compliant. | DS p.20, Ratings, AEC-Q200 Grade column, ERA6AE row group |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Resistance tolerance, code B | TOL | -0.1 |  | 0.1 | % | Resistance measured at 20 degC (DS p.21, Performance, Resistance row) Note: Printed +/-0.1 %. | DS p.20, Ratings, Resistance tolerance (%), ERA6AEB row; DS p.19, tolerance code B = +/-0.1 % |  |
+| Resistance range (E24, E96) |  | 47 |  | 1000000 | ohm | E24, E96 values (E192 on request, not in this format) Note: The printed range for this size's EB grade, as printed (the range differs by size). Printed in k and M: written out in ohm. Duplicate values follow the E24 part number (DS note *5). Values in E96 below 100 ohm have no printed code (calc.mpn raises). | DS p.20, Ratings, Resistance range (ohm), ERA6AEB row '47 to 1 M (E24,E96)' |  |
+| Temperature coefficient of resistance, +/-25 ppm/degC | TCR | -25 |  | 25 | ppm/degC | T.C.R. test at +25 degC / +125 degC (DS p.21, Performance) Note: Printed +/-25 x10^-6/K for this size's range (one value for the printed resistance range). Stored as min = -25, max = 25. The DS does not state the reference temperature for the T.C.R.; the Performance test runs from +25 degC. | DS p.20, Ratings, T.C.R. (x10-6/K), ERA6AED, AEC, AEB group, +/-25 (the printed x10^-6/K unit is ppm/degC) |  |
+| Resistance change, overload |  | -0.1 |  | 0.1 | % | Rated voltage x 2.5, 5 s Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Overload, R>=47 ohm: +/-0.1 % |  |
+| Resistance change, resistance to soldering heat |  | -0.1 |  | 0.1 | % | 270 degC, 10 s Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Resistance to soldering heat, R>=47 ohm: +/-0.1 % |  |
+| Resistance change, rapid change of temperature |  | -0.1 |  | 0.1 | % | ERA3A, 6A, 8A: -55 degC (30 min) / +155 degC (30 min), 1000 cycles Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Rapid change of temperature, R>=47 ohm: +/-0.1 % |  |
+| Resistance change, high temperature exposure |  | -0.1 |  | 0.1 | % | +155 degC, 1000 h Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, High temperature exposure, R>=47 ohm: +/-0.1 % |  |
+| Resistance change, damp heat, steady state |  | -0.1 |  | 0.1 | % | 85 degC, 85 %RH, 1000 h Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Damp heat, steady state, R>=47 ohm: +/-0.1 % |  |
+| Resistance change, load life in humidity |  | -0.1 |  | 0.1 | % | 85 degC, 85 %RH, 10 % rated power, 1.5 h ON / 0.5 h OFF, 1000 h; max test voltage 31.6 V (this size) Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Load life in humidity, R>=47 ohm: +/-0.1 % |  |
+| Resistance change, endurance at 85 degC |  | -0.1 |  | 0.1 | % | 85 degC, rated voltage, 1.5 h ON / 0.5 h OFF, 1000 h Note: Printed +/-0.1 % (R>=47 ohm row). | DS p.21, Performance, Endurance at 85 degC, R>=47 ohm: +/-0.1 % |  |
+| AEC-Q200 grade |  |  | Grade 0 |  |  | Note: Informational. DS p.19 Features: AEC-Q200 compliant. | DS p.20, Ratings, AEC-Q200 Grade column, ERA6AE row group |  |
 
 ## Parameters: mechanical
 
-| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite |
-|---|---|---|---|---|---|---|---|
-| Body length | L | 1.8 | 2.0 | 2.2 | mm | Note: Printed 2.00+/-0.20 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column L |
-| Body width | W | 1.15 | 1.25 | 1.35 | mm | Note: Printed 1.25+/-0.10 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column W |
-| Terminal width, a | a | 0.15 | 0.4 | 0.65 | mm | Note: Printed 0.40+/-0.25 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column a |
-| Terminal width, b | b | 0.15 | 0.4 | 0.65 | mm | Note: Printed 0.40+/-0.25 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column b |
-| Terminal thickness, T | T | 0.4 | 0.5 | 0.6 | mm | Note: Printed 0.50+/-0.10 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column T |
-| Mass (reference) |  |  | 4 |  | mg | Reference value, per part Note: 4 g per 1000 pcs = 4 mg per part (per-part value in mg keeps the printed digits). Reference only, not a bound. | DS p.21, Dimensions (mm) table, row ERA6A, Mass (Weight) (Reference) (g/1000 pcs) = 4 |
-| Land pattern dimension a (DS land pattern table, rectangular type) | a | 1.0 |  | 1.4 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. The land table is one table for the listed categories; the ERA key line is printed above it. The footprint uses the middle of the range (pads 1.15 x 1.15 mm at +/-1.175 mm). | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'High precision type (ERA, ERJPC/PB)' key, row 0805 (2012), column a |
-| Land pattern dimension b (DS land pattern table, rectangular type) | b | 3.2 |  | 3.8 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. The land table is one table for the listed categories; the ERA key line is printed above it. The footprint uses the middle of the range (pads 1.15 x 1.15 mm at +/-1.175 mm). | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'High precision type (ERA, ERJPC/PB)' key, row 0805 (2012), column b |
-| Land pattern dimension c (DS land pattern table, rectangular type) | c | 0.9 |  | 1.4 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. The land table is one table for the listed categories; the ERA key line is printed above it. The footprint uses the middle of the range (pads 1.15 x 1.15 mm at +/-1.175 mm). | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'High precision type (ERA, ERJPC/PB)' key, row 0805 (2012), column c |
+| Parameter | Symbol | Min | Typ | Max | Unit | Conditions | Cite | Verified |
+|---|---|---|---|---|---|---|---|---|
+| Body length | L | 1.8 | 2.0 | 2.2 | mm | Note: Printed 2.00+/-0.20 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column L |  |
+| Body width | W | 1.15 | 1.25 | 1.35 | mm | Note: Printed 1.25+/-0.10 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column W |  |
+| Terminal width, a | a | 0.15 | 0.4 | 0.65 | mm | Note: Printed 0.40+/-0.25 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column a |  |
+| Terminal width, b | b | 0.15 | 0.4 | 0.65 | mm | Note: Printed 0.40+/-0.25 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column b |  |
+| Terminal thickness, T | T | 0.4 | 0.5 | 0.6 | mm | Note: Printed 0.50+/-0.10 mm (DS p.21). | DS p.21, Dimensions (mm) table, row ERA6A, column T |  |
+| Mass (reference) |  |  | 4 |  | mg | Reference value, per part Note: 4 g per 1000 pcs = 4 mg per part (per-part value in mg keeps the printed digits). Reference only, not a bound. | DS p.21, Dimensions (mm) table, row ERA6A, Mass (Weight) (Reference) (g/1000 pcs) = 4 |  |
+| Land pattern dimension a (DS land pattern table, rectangular type) | a | 1.0 |  | 1.4 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. The land table is one table for the listed categories; the ERA key line is printed above it. The footprint uses the middle of the range (pads 1.15 x 1.15 mm at +/-1.175 mm). | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'High precision type (ERA, ERJPC/PB)' key, row 0805 (2012), column a |  |
+| Land pattern dimension b (DS land pattern table, rectangular type) | b | 3.2 |  | 3.8 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. The land table is one table for the listed categories; the ERA key line is printed above it. The footprint uses the middle of the range (pads 1.15 x 1.15 mm at +/-1.175 mm). | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'High precision type (ERA, ERJPC/PB)' key, row 0805 (2012), column b |  |
+| Land pattern dimension c (DS land pattern table, rectangular type) | c | 0.9 |  | 1.4 | mm | Recommended land pattern (not a tolerance on the body) Note: Printed as a range. The land table is one table for the listed categories; the ERA key line is printed above it. The footprint uses the middle of the range (pads 1.15 x 1.15 mm at +/-1.175 mm). | DS PDF p.1, DMM0000COL17 (Panasonic land-pattern document), Recommended land pattern, 'High precision type (ERA, ERJPC/PB)' key, row 0805 (2012), column c |  |
 
 ## Limits of this data
 
