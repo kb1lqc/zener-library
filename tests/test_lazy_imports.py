@@ -40,6 +40,14 @@ class LazyImports(unittest.TestCase):
                            cwd=ROOT, capture_output=True, text=True, timeout=60)
         self.assertEqual(p.returncode, 0, p.stderr)
 
+    def test_wca_is_the_function_after_any_import_order(self):
+        # lib.wca is both a submodule and a function; `from lib import wca` must give the function even after the
+        # submodule was imported (lib.report imports it). Fresh interpreter per order.
+        for pre in ("", "import lib.report; ", "import lib.wca; ", "from lib import table; "):
+            code = pre + "import lib; from lib import wca, sweep; assert callable(wca) and callable(lib.wca), type(wca)"
+            p = subprocess.run([sys.executable, "-c", code], cwd=ROOT, capture_output=True, text=True, timeout=60)
+            self.assertEqual(p.returncode, 0, pre + p.stderr)
+
     def test_package_exports_still_resolve(self):
         import lib
         for name in lib.__all__:
