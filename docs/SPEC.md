@@ -26,6 +26,7 @@ the file that now holds it. Load only the file your role needs.
 | Datasheet review record (`review/`, ledger states, images, stamp format) | docs/spec/review.md |
 | Human review view (rows that matter, part status, review page, pinout stamp) | docs/spec/review-view.md |
 | Using a part (lib API); Worst-case method (`wca`) | docs/spec/lib-api.md |
+| Equations: record, hash, stamp, state, find, review page | docs/spec/equations.md |
 | Using the library from a blocks repo (status check, `library-inputs.json`) | docs/spec/blocks.md |
 | Validation; README "Limits of this data" | enforced in `lib/check.py`, `lib/readme.py` (not prose) |
 | Goal; rationale; history | docs/notes/spec-rationale.md (humans only) |

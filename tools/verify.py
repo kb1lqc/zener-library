@@ -17,7 +17,7 @@ listed), so a stale record never passes CI by being regenerated in the runner; i
 line and lib.check's (evidence mode with the PDF, ledger-only mode without) are printed in the PASS line.
 If lib.check names parts whose local evidence cache is missing ("rerun python3 tools/ds_review.py <dir>"), verify rebuilds exactly
 those caches (local, git-ignored) and checks again; a committed record that rebuild changes is a FAIL unless --regen.
-lib.zen and lib.readme must leave components/**, README.md and docs/PARTS.md byte-identical (content hashes before and after). A
+lib.zen and lib.readme must leave components/**, README.md, docs/PARTS.md and docs/EQUATIONS.md byte-identical (content hashes before and after). A
 difference is a FAIL unless --regen is given; then the changed files are listed and the run still passes.
 A PDF tracked by git or under components/ is a FAIL (datasheets live in git-ignored docs/datasheets/).
 Output: one PASS line with counts, or the first 5 failures as `file:line message` (`step: line` when the tool prints no
@@ -69,7 +69,7 @@ def tree_hashes(root):
     """sha256 of every file under components/, README.md and docs/PARTS.md, keyed by relative path (no .pcb, no __pycache__)."""
     out = {}
     root = Path(root)
-    for name in ("README.md", "docs/PARTS.md"):  # = lib.readme.TOP_FILES (tests/test_review.py checks they agree)
+    for name in ("README.md", "docs/EQUATIONS.md", "docs/PARTS.md"):  # = lib.readme.TOP_FILES (tests/test_review.py checks they agree)
         f = root / name
         if f.is_file():
             out[name] = hashlib.sha256(f.read_bytes()).hexdigest()

@@ -1,6 +1,7 @@
 # OS / tooling
 .DS_Store
 __pycache__/
+.venv/
 .pcb/
 *.zip
 .claude/settings.local.json

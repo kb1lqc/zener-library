@@ -73,6 +73,23 @@ has checked (see the [glossary](CONTRIBUTING.md#glossary)).
 34 parts from 7 manufacturers, 7 released (every row that matters checked by a person). One line per part, by manufacturer: [docs/PARTS.md](docs/PARTS.md). Is a part safe to use: `python3 tools/status.py <Value>`.
 <!-- review-status:end -->
 
+## Python environment
+
+Equation hashes and stamps (`docs/spec/equations.md`) need exactly Python 3.12, the version CI uses. Other tools
+accept 3.11+, but on any other version equation states read `UNKNOWN` and `tools/equations.py stamp` refuses.
+A virtual environment keeps this separate from the system Python:
+
+```
+python3.12 -m venv .venv
+source .venv/bin/activate        # Linux and macOS
+.venv\Scripts\activate           # Windows (cmd or PowerShell)
+python -m pip install matplotlib
+python --version                 # must print Python 3.12.x
+```
+
+Alternatives (not run here): `uv venv --python 3.12`, or `conda create -n agenteda python=3.12 matplotlib`.
+Run every `python3 tools/...` command from the activated environment.
+
 ## Use in a Zener module
 
 ```zen

@@ -3,7 +3,7 @@
 
 Usage (repo root, CI on pull requests):
   python3 tools/check_stamps.py --author LOGIN --base REF [--head REF] [--root R]
-Structural, not a text diff: lists the changed components/**/component.toml and variants.toml files (`git diff --name-only
+Structural, not a text diff: lists the changed components/**/component.toml, variants.toml and equations.toml files (`git diff --name-only
 --no-renames BASE...HEAD`; a rename is a delete plus an add), reads each file at HEAD and at the merge base with
 `git show`, parses both with tomllib and walks every string value. A value starting with "human:" that is new or
 changed versus the merge base at the same TOML key path must read `human:<LOGIN> ...` (LOGIN by GitHub login rules,
@@ -23,7 +23,8 @@ import tomllib
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from lib.component import GITHUB_LOGIN  # noqa: E402  (the stamp's name part, as lib checks it)
 
-PATHSPECS = (":(glob)components/**/component.toml", ":(glob)components/**/variants.toml")  # override stamps live in variants.toml
+PATHSPECS = (":(glob)components/**/component.toml", ":(glob)components/**/variants.toml",  # override stamps live in variants.toml
+             ":(glob)components/**/equations.toml")  # equation stamps (docs/spec/equations.md)
 NAME_RE = re.compile(rf"human:({GITHUB_LOGIN}) ")
 
 

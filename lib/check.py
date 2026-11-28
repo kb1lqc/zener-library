@@ -8,7 +8,7 @@ import sys
 import tomllib
 from pathlib import Path
 
-from . import capacitor, catalog, kicad, rules, series
+from . import capacitor, catalog, equations, kicad, rules, series
 from . import review_status
 from .component import (EVIDENCE, ROOT, _read_toml, _repo_root, ledger_state_of, load_calc, merge_variant, override_rows, pinout_hash, row_hash,
                         run_example, variants_of)
@@ -448,6 +448,7 @@ def check_calc(folder, params, inputs=True):
     except Exception as e:
         return out + [("ERROR", f"calc.py fails to import: {e}")]
     out += finding_messages(rules.inputs_coverage_findings(calc))
+    out += equations.check_folder(folder)  # equations.toml records (docs/spec/equations.md); [] when absent
     return out + check_examples(calc) + (check_inputs(calc, params) if inputs else [])
 
 

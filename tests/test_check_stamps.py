@@ -163,6 +163,21 @@ class VariantsMoves(Repo):
     def test_a_renamed_variant_is_a_new_stamp(self):
         self.flagged({self.V: self.block("V1", "a", BOB)}, {self.V: self.block("V2", "a", BOB)})
 
+    def test_equation_stamps_in_equations_toml_name_the_author(self):
+        eq = "components/Acme/X/equations.toml"
+        base = '[equation.f]\ntitle = "t"\n'
+        stamp = lambda who: f'verified = "human:{who} 2026-11-28 equation-review X.f hash 0123456789ab"\n'  # noqa: E731
+        out = self.flagged({X: BASE, eq: base}, {eq: base + stamp("bob")})
+        self.assertIn(f"{eq}:3: human stamp names bob", out)
+        self.fresh()
+        self.assertEqual(self.run_c({X: BASE, eq: base}, {eq: base + stamp("alice")})[0], 0)
+        self.fresh()
+        self.flagged({eq: base + stamp("alice")}, {eq: base + stamp("bob")})  # a changed stamp
+        self.fresh()
+        self.assertEqual(self.run_c({eq: base + stamp("bob")}, {eq: base + stamp("bob") + "# x\n"})[0], 0)  # unchanged
+        self.fresh()
+        self.assertEqual(self.run_c({eq: base}, {eq: base + 'verified = "machine check"\n'})[0], 0)  # machine stamp ignored
+
 
 if __name__ == "__main__":
     unittest.main()

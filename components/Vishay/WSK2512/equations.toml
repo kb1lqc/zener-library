@@ -1,0 +1,69 @@
+# Equation records for calc.py (docs/spec/equations.md). Written by hand from the function bodies; `verified` is written
+# only by tools/equations.py stamp, run by a person. This file is separate from component.toml on purpose: editing it
+# never changes the datasheet ledger's component hash.
+
+[equation.resistance_worst]
+title = "Resistance with tolerance, TCR and aging"
+kind = "derived"
+latex = [
+  'R = R_0\,(1+\varepsilon)\,\bigl(1+\alpha\,(T-T_\mathrm{ref})\bigr)\,(1+a) + a_\mathrm{abs}',
+  'a = 0,\; a_\mathrm{abs} = 0 \;\Rightarrow\; R = R_0\,(1+\varepsilon)\,\bigl(1+\alpha\,(T-T_\mathrm{ref})\bigr)',
+]
+cite = "not a datasheet equation; inputs from DS p.1 tolerance, DS p.2 TCR, DS p.3 PERFORMANCE test limits (aging)"
+note = "The DS states no reference temperature; the caller supplies t_ref_c (25 degC is the usual assumption). The TCR term is valid only over a temperature span the DS does not state (open item)."
+reuse_search = "find: resistance tolerance tcr aging worst; resistance_worst -> no records existed in the library. Same-named functions without records: Panasonic ERJ-3EKF, ERJ-2RKF, ERJ-6ENF, ERJ-8ENF, ERA-2AEB, ERA-3AEB, ERA-6AEB (no aging terms, other parts' rows) and WSK2512-LOW, WSK2512R0250D (copies for those parts). None reused: the id is per part."
+
+[equation.resistance_worst.symbols]
+r0 = { tex = 'R_0', meaning = "nominal resistance (plain value, not Part.series_value)", unit = "ohm" }
+tol = { tex = '\varepsilon', meaning = "tolerance of the part's code, as a fraction (0.005 = 0.5 %)", unit = "1" }
+tcr = { tex = '\alpha', meaning = "temperature coefficient of resistance (35e-6 = 35 ppm/degC)", unit = "1/degC" }
+t_c = { tex = 'T', meaning = "resistor temperature", unit = "degC" }
+t_ref_c = { tex = 'T_\mathrm{ref}', meaning = "reference temperature at which the resistance is R_0", unit = "degC" }
+aging = { tex = 'a', meaning = "end-of-life test limit as a fraction (0.01 = 1.0 %); 0 = beginning of life", unit = "1" }
+aging_abs = { tex = 'a_\mathrm{abs}', meaning = "end-of-life additive test limit; 0 = beginning of life", unit = "ohm" }
+result = { tex = 'R', meaning = "resistance", unit = "ohm" }
+
+[equation.sense_voltage]
+title = "Sense voltage (Ohm's law)"
+kind = "derived"
+latex = [
+  'V = I\,R',
+]
+cite = "not a datasheet equation; DS p.3 Notes: E1 and E2 sense the voltage of the current path"
+reuse_search = "find: sense voltage ohm current resistance; sense_voltage -> no records existed in the library. Same function without a record: WSK2512-LOW and WSK2512R0250D sense_voltage. Not reused: the id is per part."
+
+[equation.sense_voltage.symbols]
+i = { tex = 'I', meaning = "current through the resistor (signed)", unit = "A" }
+r = { tex = 'R', meaning = "resistance", unit = "ohm" }
+result = { tex = 'V', meaning = "voltage between the E1 and E2 sense terminals", unit = "V" }
+
+[equation.dissipation]
+title = "Power dissipated in the resistor"
+kind = "derived"
+latex = [
+  'P = I^{2}\,R',
+]
+cite = "not a datasheet equation; physical relation (DS p.1 and p.3 rate power only)"
+reuse_search = "find: dissipation power resistor current squared; dissipation -> no records existed in the library. Similar conduction-loss functions in Infineon BSC040N10NS5, ISC035N10NM5LF2, ISC750P10LM calc.py (P = I^2 x RDS(on), other parts, no records). Not reused: the id is per part."
+
+[equation.dissipation.symbols]
+i = { tex = 'I', meaning = "current through the resistor (either sign)", unit = "A" }
+r = { tex = 'R', meaning = "resistance", unit = "ohm" }
+result = { tex = 'P', meaning = "power in the resistor", unit = "W" }
+
+[equation.rated_power]
+title = "Rated power versus ambient temperature"
+kind = "datasheet"
+latex = [
+  'P(T_a) = \begin{cases} P_{70} & T_a \le T_\mathrm{knee} \\ P_{70}\,\dfrac{T_0 - T_a}{T_0 - T_\mathrm{knee}} & T_\mathrm{knee} < T_a < T_0 \\ 0 & T_a \ge T_0 \end{cases}',
+]
+cite = "DS p.1, Standard Electrical Specifications, P70 degC = 1.0 W (a maximum); DS p.3, DERATING graph (knee and zero read off the curve)"
+note = "Only P70 is a printed rating. The knee and zero temperatures are read off the derating graph (curve = true), so above the knee the result is a curve-based estimate, not a datasheet bound."
+reuse_search = "find: rated power derating ambient temperature knee; rated_power -> no records existed in the library. Same-shaped functions without records: Panasonic ERJ-3EKF, ERJ-2RKF, ERJ-6ENF, ERJ-8ENF (p70) and ERA-2AEB, ERA-3AEB, ERA-6AEB (p85), WSK2512-LOW, WSK2512R0250D. Not reused: the rating row and curve points belong to each part."
+
+[equation.rated_power.symbols]
+ta_c = { tex = 'T_a', meaning = "ambient temperature", unit = "degC" }
+p70 = { tex = 'P_{70}', meaning = "rated power at 70 degC ambient (printed rating, maximum)", unit = "W" }
+knee_c = { tex = 'T_\mathrm{knee}', meaning = "ambient temperature up to which the full rating holds (read off the derating graph)", unit = "degC" }
+zero_c = { tex = 'T_0', meaning = "ambient temperature at which the rating reaches zero (read off the derating graph)", unit = "degC" }
+result = { tex = 'P(T_a)', meaning = "rated power at ambient temperature", unit = "W" }

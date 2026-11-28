@@ -10,11 +10,11 @@ clever: plain TOML, plain Python (stdlib + matplotlib), standard KiCad files. Ge
   in Zener; change the TOML and regenerate. A number lives in one place.
 
 ## Where things live
-Format contract: `docs/SPEC.md` index, files in `docs/spec/`. KiCad rules: `docs/KICAD.md`. Briefs: `docs/briefs/`.
+Format contract: `docs/SPEC.md` index, files in `docs/spec/`. KiCad rules: `docs/KICAD.md`. Equation records and stamps: `docs/spec/equations.md`, `tools/equations.py`. Briefs: `docs/briefs/`.
 Reference packages: `components/TexasInstruments/INA821IDGK/` (amplifier), `.../AnalogDevices/LTC4364MS/`
 (family), `.../Vishay/WSK2512R0250D/` (passive). `docs/notes/`: humans only.
 Generated, never hand-edited: `components/**/README.md`, `<Value>.zen`, `docs/PARTS.md` (the parts index; the root
-README holds only a count and a link) and the block between the `review-status` markers in `README.md`, all by
+README holds only a count and a link), `docs/EQUATIONS.md` (the equations index) and the block between the `review-status` markers in `README.md`, all by
 `python3 -m lib.readme` (run by `verify`). A new part appears in `docs/PARTS.md` by regenerating, never by editing.
 "Is this part safe to use?": `python3 tools/status.py <Value> [--json]` (ledger only, no PDFs or export). A blocks repo
 (AgentEDA-Blocks or any other) uses the library as in `docs/spec/blocks.md`. No worked examples live here: they belong

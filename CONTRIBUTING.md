@@ -22,7 +22,8 @@ table at the top of the [README](README.md). Derived rows need no tick, no stamp
 
 ## Setup
 
-- Python 3.11+ with matplotlib: `python3 -m pip install matplotlib`
+- Python 3.12 exactly (the CI version; equation hashes and stamps are valid only on it, other versions show `UNKNOWN` and
+  refuse to stamp) with matplotlib, in a virtual environment: recipe in the README, "Python environment"
 - poppler, for page images: `brew install poppler` (macOS) or `sudo apt-get install poppler-utils` (Debian/Ubuntu)
 - pcb 0.4.x, the Zener toolchain (https://docs.pcb.new). This repo pins `pcb-version = "0.4"` in `pcb.toml`.
   Check with `pcb --version`.
@@ -68,7 +69,8 @@ Read `docs/spec/extract.md` for the defaults used for every judgement call. The 
 4. **Fill `component.toml`.** Every number gets min, typ, max, unit, conditions, scope and a `cite` naming the page.
    Format: `docs/SPEC.md` (index) and `docs/spec/`. Never copy a number from memory or from another part. A `note` is
    one or two sentences: the fact a reader needs to use the row. Longer reasoning goes in the Decision Log.
-5. **Write `calc.py`.** One function per datasheet equation, each citing its page. Format: `docs/spec/lib-api.md`.
+5. **Write `calc.py`.** One function per datasheet equation, each citing its page. Format: `docs/spec/lib-api.md`. Equation
+   records (`equations.toml`, find before writing, human stamp): `docs/spec/equations.md`, `python3 tools/equations.py`.
 6. **Fix the symbol and footprint.** Rules: `docs/KICAD.md`.
 7. **Generate.** Do not edit these by hand.
 
@@ -77,7 +79,7 @@ Read `docs/spec/extract.md` for the defaults used for every judgement call. The 
    python3 -m lib.readme
    ```
 
-   `lib.readme` also refreshes `docs/PARTS.md` (the parts index) and the count at the top of `README.md`.
+   `lib.readme` also refreshes `docs/PARTS.md` (the parts index), `docs/EQUATIONS.md` (the equations index) and the count at the top of `README.md`.
 8. **Run the gate.**
 
    ```sh
